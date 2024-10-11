@@ -49,7 +49,7 @@ routes.post("/", async (req, res) => {
       email,
       senha,
       departamento,
-      tipo
+      tipoUpper
     );
     res.status(201).send({message: "Usuario incluido"});
   } catch (error) {
