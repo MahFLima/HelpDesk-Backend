@@ -31,4 +31,14 @@ async function createUser(nome, email, senha, departamento, tipo) {
   return user
 }
 
-export default {getUsers, verifyEmail, createUser}
+async function deleteUser(id){
+  const deleteUser = await prisma.user.delete({
+    where: {
+      id
+    },
+  })
+
+  return deleteUser
+}
+
+export default {getUsers, verifyEmail, createUser, deleteUser}

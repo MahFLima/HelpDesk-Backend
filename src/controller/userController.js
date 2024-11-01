@@ -60,4 +60,12 @@ routes.post("/", async (req, res) => {
   }
 });
 
+routes.delete("/:id", async(req, res) => {
+  const {id} = req.params
+
+  // res.send({message: parseInt(id)})
+  await userModel.deleteUser(parseInt(id))
+  res.status(200).send({message: "usuario excluido"}); // Enviando a resposta com os usuários
+})
+
 export default routes;
