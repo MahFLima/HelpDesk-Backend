@@ -14,4 +14,12 @@ model User {
   senha        String
   departamento String
   tipo         String
+
+  userAdm UserAdm[]
+}
+
+model UserAdm {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [id_user], references: [id])
+  id_user Int @unique
 }
