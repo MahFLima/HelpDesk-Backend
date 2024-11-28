@@ -8,17 +8,18 @@ routes.post("/", async (req, res) => {
   const { mail, password } = req.body;
 
   if (!mail || !password) {
-    return res.status(400).send({ message: "Informe email e senha" });
+    return res.send({ message: "Informe email e senha" });
   }
 
   if (!mail.includes("@")) {
-    return res.status(400).send({ message: "Informe um email válido" });
+    return res.send({ message: "Informe um email válido" });
   }
 
   try {
     const user = await loginModel.verifyUser(mail, password);
+
     if (user === null) {
-      return res.status(404).send({ message: "E-mail ou senha invalida" });
+      return res.send({ message: "E-mail ou senha invalida" });
     }
 
     const {id, nome, email, senha, departamento, tipo} = user
