@@ -16,10 +16,22 @@ model User {
   tipo         String
 
   userAdm UserAdm[]
+  // solicitacoes Solicitacao[]
 }
 
 model UserAdm {
   id Int @id @default(autoincrement())
   user User @relation(fields: [id_user], references: [id])
   id_user Int @unique
+}
+
+model Solicitacao{
+  id Int @id @default(autoincrement())
+  numero_patrimonio String
+  descricao_problema String
+  created_at DateTime @default(now())
+  adm_id Int
+  user_id Int
+
+
 }
