@@ -16,9 +16,9 @@ routes.get("/", async (req, res) => {
 });
 
 routes.post("/", async (req, res) => {
-  const { nome, email, senha, departamento, tipo } = req.body;
+  const { nome, email, senha, departamento, isAdmin } = req.body;
 
-  if ((!nome || !email || !senha, !departamento || !tipo)) {
+  if ((!nome || !email || !senha, !departamento)) {
     return res.status(400).send({ message: "Complete o formulário" });
   }
 
@@ -26,14 +26,7 @@ routes.post("/", async (req, res) => {
     return res.status(400).send({ message: "Informe um email válido" });
   }
 
-  const tipoUpper = tipo.toUpperCase();
-  if (tipoUpper !== "ADMIN" && tipoUpper !== "USER") {
-    return res
-      .status(400)
-      .send({ message: "Informe um tipo usuario válido(admin ou user)" });
-  }
-
-  if(senha.length < 7){
+  if (senha.length < 7) {
     return res.status(400).send({ message: "Senha muito curta" });
   }
 
@@ -44,14 +37,8 @@ routes.post("/", async (req, res) => {
   }
 
   try {
-    const user = await userModel.createUser(
-      nome,
-      email,
-      senha,
-      departamento,
-      tipoUpper
-    );
-    res.status(201).send({message: "Usuario incluido"});
+    const user = await userModel.createUser(nome, email, senha, departamento);
+    res.status(201).send({ message: "Usuario incluido" });
   } catch (error) {
     console.error(error);
     res
@@ -60,12 +47,32 @@ routes.post("/", async (req, res) => {
   }
 });
 
-routes.delete("/:id", async(req, res) => {
-  const {id} = req.params
+routes.put("/userAdm", async (req, res) => {
+  const { email } = req.body;
+
+  const verifyEmail = await userModel.verifyEmail(email);
+
+  if (verifyEmail === null) {
+    return res.status(400).send({ message: "E-mail invalido" });
+  }
+
+  try {
+    const user = await userModel.alterUser(verifyEmail.id, email);
+    res.status(201).send({ message: "Usuario incluido" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .send({ message: "Erro ao criar usuário", error: error.message });
+  }
+});
+
+routes.delete("/:id", async (req, res) => {
+  const { id } = req.params;
 
   // res.send({message: parseInt(id)})
-  await userModel.deleteUser(parseInt(id))
-  res.status(200).send({message: "usuario excluido"}); // Enviando a resposta com os usuários
-})
+  await userModel.deleteUser(parseInt(id));
+  res.status(200).send({ message: "usuario excluido" }); // Enviando a resposta com os usuários
+});
 
 export default routes;

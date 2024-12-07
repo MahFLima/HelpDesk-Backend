@@ -8,10 +8,34 @@ datasource db {
 }
 
 model User {
-  id           Int    @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   nome         String
-  email        String @unique
+  email        String     @unique
   senha        String
   departamento String
-  tipo         String
+  isAdmin      Boolean    @default(false)  // Indica se o usuário é administrador
+  userAdm      UserAdm?   // Relacionamento opcional com UserAdm
+  solicitacoes Solicitacao[] // Relacionamento de um-para-muitos com Solicitacao
 }
+
+model UserAdm {
+  id       Int    @id @default(autoincrement())
+  user     User   @relation(fields: [id_user], references: [id])  // Relaciona-se com User
+  id_user  Int   @unique  // Campo que conecta com User, sendo único
+  email    String  // E-mail do administrador
+  solicitacoes Solicitacao[]  // Relacionamento de um-para-muitos com Solicitacao
+}
+
+model Solicitacao {
+  id                Int      @id @default(autoincrement())
+  numero_patrimonio String
+  descricao_problema String
+  status            String   @default("Em aberto") // Novo campo com valor padrão
+  created_at        DateTime @default(now())
+  adm_id            Int?     // Torna opcional
+  user_id           Int      // Relacionamento com User
+
+  user      User    @relation(fields: [user_id], references: [id])  // Relacionamento com User
+  userAdm   UserAdm? @relation(fields: [adm_id], references: [id])   // Relacionamento opcional com UserAdm
+}
+
