@@ -47,4 +47,18 @@ async function deleteSolicitacao(id){
   return deleteSolicitation
 }
 
-export default {getSolicitacoes, createSolicitacao, getSolicitacoesByUser, getSolicitacoesById, deleteSolicitacao}
+async function updateSolicitacao(id, numero_patrimonio, descricao_problema){
+  const updateSolicitation = await prisma.solicitacao.update({
+    where:{
+      id
+    },
+    data:{
+      numero_patrimonio,
+      descricao_problema
+    }
+  })
+
+  return updateSolicitation
+}
+
+export default {getSolicitacoes, createSolicitacao, getSolicitacoesByUser, getSolicitacoesById, deleteSolicitacao, updateSolicitacao}

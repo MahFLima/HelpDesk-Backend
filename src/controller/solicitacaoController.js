@@ -87,4 +87,23 @@ routes.delete('/:id', async (req,res) => {
   }
 })
 
+routes.put('/', async(req,res) => {
+  const{ id, numero_patrimonio, descricao_problema } = req.body
+
+  if(!id || !numero_patrimonio || !descricao_problema) {
+    return res.status(404).send({ message: 'Complete o formulario'})
+  }
+
+  try{
+    const solicitacao = solicitacaoModel.updateSolicitacao(id, numero_patrimonio, descricao_problema)
+    res.status(201).send({ message: "Solicitação atualizada" });
+  } catch(e){
+    console.error(e);
+    res
+      .status(500)
+      .send({ message: "Erro ao atualizar solicitação", e: e.message });
+  }
+
+})
+
 export default routes;
