@@ -33,6 +33,22 @@ routes.get('/user/:id', async (req, res) => {
   }
 })
 
+routes.get('/:id', async (req, res) => {
+  const {id} = req.params;
+  try{
+    const solicitacoes = await solicitacaoModel.getSolicitacoesById(parseInt(id))
+    if(solicitacoes.length === 0){
+      return res.status(404).send({
+        message: 'Nenhuma solicitação cadastrada'
+      })
+    }
+    res.status(200).send({message: solicitacoes})
+  } catch(err){
+    console.error(err);
+    res.status(500).json({ message: "Erro ao buscar solicitações" });
+  }
+})
+
 routes.post('/', async (req, res) => {
   const {
     numero_patrimonio,
@@ -51,7 +67,7 @@ routes.post('/', async (req, res) => {
     console.error(e);
     res
       .status(500)
-      .send({ message: "Erro ao criar usuário", e: e.message });
+      .send({ message: "Erro ao criar solicitação", e: e.message });
   }
 })
 

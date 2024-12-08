@@ -16,6 +16,15 @@ async function getSolicitacoesByUser(user_id) {
   return solicitacoes;
 }
 
+async function getSolicitacoesById(id) {
+  const solicitacoes = await prisma.solicitacao.findMany({
+    where: {
+      id
+    },
+  });
+  return solicitacoes;
+}
+
 async function createSolicitacao(numero_patrimonio, descricao_problema, user_id){
   const novaSolicitacao = await prisma.solicitacao.create({
     data: {
@@ -28,4 +37,4 @@ async function createSolicitacao(numero_patrimonio, descricao_problema, user_id)
   return novaSolicitacao 
 }
 
-export default {getSolicitacoes, createSolicitacao, getSolicitacoesByUser}
+export default {getSolicitacoes, createSolicitacao, getSolicitacoesByUser, getSolicitacoesById}
