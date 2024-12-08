@@ -17,14 +17,15 @@ routes.post("/", async (req, res) => {
 
   try {
     const user = await loginModel.verifyUser(mail, password);
+    console.log(user)
 
     if (user === null) {
       return res.send({ message: "E-mail ou senha invalida" });
     }
 
-    const {id, nome, email, senha, departamento, tipo} = user
+    const {id, nome, email, senha, departamento, isAdmin} = user
 
-    const token = createTokenJWT(id, nome, email, senha, departamento, tipo)
+    const token = createTokenJWT(id, nome, email, senha, departamento, isAdmin)
 
     return res.status(200).send({message: token})
   } catch (error) {
