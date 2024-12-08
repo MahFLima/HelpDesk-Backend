@@ -1,6 +1,8 @@
 import express from "express";
+import { PrismaClient } from "@prisma/client";
 import solicitacaoModel from "../model/solicitacaoModel.js";
 const routes = express.Router();
+const prisma = new PrismaClient()
 
 routes.get('/', async (req, res) => {
   try{
@@ -68,6 +70,20 @@ routes.post('/', async (req, res) => {
     res
       .status(500)
       .send({ message: "Erro ao criar solicitação", e: e.message });
+  }
+})
+
+routes.delete('/:id', async (req,res) => {
+  const {id} = req.params;
+
+  try{
+    const deleteSolicitation = await solicitacaoModel.deleteSolicitacao(parseInt(id))
+    res.status(200).send({ message: "Solicitação excluida" });
+  } catch(e){
+    console.error(e);
+    res
+      .status(500)
+      .send({ message: "Erro excluir solicitação", e: e.message });
   }
 })
 
